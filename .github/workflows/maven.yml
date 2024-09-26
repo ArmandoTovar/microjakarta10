@@ -51,42 +51,39 @@ jobs:
           path: target
       - name: Build OCI container
         run: mvn -B k8s:build k8s:resource
-      - name: Get or create an OCIR Repository
-        uses: oracle-actions/get-ocir-repository@v1.1
-        id: get-ocir-repository
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          name: microjakarta10
-          compartment: ${{ secrets.OCI_COMPARTMENT_OCID }}
-      - name: Log into OCIR
-        uses: oracle-actions/login-ocir@v1.1
-        id: login-ocir
-        with:
-          auth_token: ${{ secrets.OCI_AUTH_TOKEN }}
-      - name: Push to Oracle Cloud
-        run: mvn -B k8s:push
-      - uses: actions/upload-artifact@v3
-        with:
-          name: k8splan
-          path: target/classes/META-INF/jkube/kubernetes.yml
-  deploy-to-oci:
-    name: Deploy to OCI
-    needs: push-to-oci
-    runs-on: ubuntu-latest
-    env:
-      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
-      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
-      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
-      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
-      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: k8splan
-          path: target/classes/META-INF/jkube/kubernetes.yml
-      - name: Configure Kubectl
-        uses: oracle-actions/configure-kubectl-oke@v1.3.1
-        id: test-configure-kubectl-oke-action
-        with:
-          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
-      - name: Deploy to OKE
-        run: kubectl apply -f target/classes/META-INF/jkube/kubernetes.yml
+          role-to-assume: arn:aws:cloudformation:us-east-1:430118852313:stack/nombre-del-stack/d4a91000-7c1d-11ef-af0b-0e651dc79821
+          aws-region: us-east-1
+      - name: Login to Amazon ECR Private
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+  #     - name: Push to Oracle Cloud
+  #       run: mvn -B k8s:push
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: k8splan
+  #         path: target/classes/META-INF/jkube/kubernetes.yml
+  # deploy-to-oci:
+  #   name: Deploy to OCI
+  #   needs: push-to-oci
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+  #     OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+  #     OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+  #     OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+  #     OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+  #   steps:
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: k8splan
+  #         path: target/classes/META-INF/jkube/kubernetes.yml
+  #     - name: Configure Kubectl
+  #       uses: oracle-actions/configure-kubectl-oke@v1.3.1
+  #       id: test-configure-kubectl-oke-action
+  #       with:
+  #         cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+  #     - name: Deploy to OKE
+  #       run: kubectl apply -f target/classes/META-INF/jkube/kubernetes.yml
