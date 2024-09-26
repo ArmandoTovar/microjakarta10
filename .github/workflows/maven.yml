@@ -52,8 +52,8 @@ jobs:
       #   with:
       #     name: target
       #     path: target
-      - name: Build OCI container
-        run: mvn -B k8s:build k8s:resource
+      # - name: Build OCI container
+      #   run: mvn -B k8s:build k8s:resource
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
