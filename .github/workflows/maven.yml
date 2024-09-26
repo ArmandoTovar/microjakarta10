@@ -29,7 +29,7 @@ jobs:
   #         path: target
   push-to-oci:
     name: Push to OCI
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     permissions:
       id-token: write
