@@ -48,10 +48,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - uses: actions/download-artifact@v3
-        with:
-          name: target
-          path: target
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: target
+      #     path: target
       - name: Build OCI container
         run: mvn -B k8s:build k8s:resource
       - name: Configure AWS credentials
