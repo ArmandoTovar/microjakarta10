@@ -34,8 +34,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    # env:
-    #   OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+    env:
+      ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }}
     #   OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
     #   OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
     #   OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
@@ -57,7 +57,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:cloudformation:us-east-1:430118852313:stack/nombre-del-stack/d4a91000-7c1d-11ef-af0b-0e651dc79821
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: us-east-1
       - name: Login to Amazon ECR Private
         id: login-ecr
