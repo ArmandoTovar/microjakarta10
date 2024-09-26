@@ -17,7 +17,7 @@
         <version.wildfly.datasources.galleon-pack>3.0.0.Beta1</version.wildfly.datasources.galleon-pack>
         <version.testcontainers>1.17.5</version.testcontainers>
         <version>1.10.1</version>
-        <jkube.generator.name>iad.ocir.io/idemd9jasawg/microjakarta10:%l</jkube.generator.name>
+        <jkube.generator.name>430118852313.dkr.ecr.us-east-1.amazonaws.com/test/microjakarta10:%l</jkube.generator.name>
     </properties>
     
     <dependencies>
